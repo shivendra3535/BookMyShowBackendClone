@@ -3,10 +3,7 @@ package com.bms.service;
 import com.bms.dto.*;
 import com.bms.exception.ResourceNotFoundException;
 import com.bms.models.*;
-import com.bms.repo.MovieRepository;
-import com.bms.repo.ScreenRepository;
-import com.bms.repo.ShowRepository;
-import com.bms.repo.ShowSeatRepository;
+import com.bms.repo.*;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -30,6 +27,9 @@ public class ShowService {
     @Autowired
     private ShowSeatRepository showSeatRepository;
 
+    @Autowired
+    private SeatRepository seatRepository;
+
     @Transactional
     public ShowDTO createShow(ShowDTO showDTO){
         Show show = new Show();
@@ -45,10 +45,23 @@ public class ShowService {
 
         Show savedShow = showRepository.save(show);
 
-        List<ShowSeat> availableSeats = showSeatRepository.findAll().stream()
+        /*List<ShowSeat> availableSeats = showSeatRepository.findAll().stream()
                 .filter(seat -> seat.getShow().getId().equals(savedShow.getId()))
                 .filter(seat -> "AVAILABLE".equalsIgnoreCase(seat.getStatus()))
-                .collect(Collectors.toList());
+                .collect(Collectors.toList());*/
+        List<Seat> seats = seatRepository.findByScreenId(screen.getId());
+
+        // 3. Create ShowSeat entries for this show
+        List<ShowSeat> availableSeats = seats.stream().map(seat -> {
+            ShowSeat ss = new ShowSeat();
+            ss.setShow(savedShow);
+            ss.setSeat(seat);
+            ss.setStatus("AVAILABLE");
+            ss.setPrice(seat.getBasePrice()); // can add logic for premium pricing
+            return ss;
+        }).collect(Collectors.toList());
+
+        showSeatRepository.saveAll(availableSeats);
 
         return mapToDTO(savedShow, availableSeats);
     }
