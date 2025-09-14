@@ -1,150 +1,32 @@
 🎬 BookMyShow Clone – Movie Ticket Booking System
-📌 Overview
 
-This project is a BookMyShow-inspired movie ticket booking system, built with Spring Boot (backend) and React.js (frontend). It allows users to browse movies, view show timings, check seat availability, and make bookings.
+This project is a BookMyShow-inspired movie ticket booking system built with Spring Boot (backend) and React.js (frontend). It provides users with a complete end-to-end flow for browsing movies, checking available shows, selecting seats, and booking tickets. The aim of the project was to gain real-world hands-on experience with full-stack application development, involving proper REST APIs, database relationships, and a frontend integration with error handling.
 
-The goal was to simulate a real-world full-stack application with proper REST APIs, database relations, and a clean frontend integration.
+The system includes multiple features such as user registration and login, movie browsing by genre and language, viewing show timings, checking seat availability in real-time, booking tickets with payment options, and maintaining proper validations on both the backend and frontend. The backend is powered by Spring Boot with Spring Data JPA (Hibernate) for ORM and MySQL as the relational database. The frontend is built using React.js with React Router for navigation and Axios for API calls.
 
-🚀 Features
+The API design is clean and follows a RESTful structure. For users, there are endpoints to create, update, delete, and fetch users. Movies can be searched by ID, title, genre, or language. Shows can be created, updated, deleted, and fetched by either ID or movie ID. Each show has its own associated seats, which can be fetched and updated individually. The booking module is the most crucial part, where a user can create a new booking by selecting available seats for a specific show. The booking request validates seat availability and calculates the total ticket price before confirming the booking. Bookings can also be canceled through the API.
 
-User registration & login
+For example, creating a booking requires a request like:
 
-Browse movies by genre/language
+{
+  "userId": 1,
+  "showId": 2,
+  "seatIds": [1, 2, 3],
+  "paymentMethod": "UPI"
+}
 
-View shows & timings
 
-Seat selection with availability status
+If successful, the response contains booking details such as the booked seats, total amount, and confirmation status.
 
-Ticket booking with payment options
+Through this project, I learned how to design and implement REST APIs in Spring Boot, how to structure entities with proper foreign key relationships in MySQL, and how to use DTOs for clean data transfer between the backend and frontend. I also gained a solid understanding of handling backend validations, integrating the APIs with a React frontend, and managing CORS issues by using the @CrossOrigin annotation. On the frontend, I practiced working with React Router for page navigation, handling forms and validations, integrating with APIs using Axios, and displaying server responses and error messages gracefully.
 
-Backend validations (seat availability, duplicate booking prevention)
+During the development process, I faced multiple errors that significantly enhanced my debugging skills. At one point, I encountered ambiguous handler mapping errors in Spring Boot when trying to fetch movies by name, genre, and language. I solved this by restructuring my endpoints, such as using /api/movies/id/{id} and /api/movies/genre/{genre}, to avoid clashes. Another frequent issue was related to seat availability, where even available seats were marked unavailable due to incorrect status handling in the database. Fixing this required correcting the status field values (AVAILABLE, BOOKED) and updating the booking service logic. In React, I faced an “Element type is invalid” error due to confusion between default and named imports, which I fixed by aligning export and import correctly. I also faced foreign key constraint failures in MySQL when inserting data in the wrong order; the solution was to insert data following the hierarchy: movies → shows → seats → bookings. Additionally, I solved CORS errors between React and Spring Boot by allowing requests from http://localhost:3000 in my controllers.
 
-REST APIs with proper request/response DTOs
+This project gave me practical, hands-on exposure to full-stack development, starting from designing the database schema and entity relationships, to implementing API endpoints, to integrating the backend with a React frontend. I now feel more confident in developing production-grade applications, debugging runtime issues, and maintaining clean communication between client and server through JSON APIs.
 
-MySQL integration with foreign key relationships
+Looking ahead, I plan to enhance this project further by adding JWT-based authentication for secure login and signup, integrating a real payment gateway, and building an admin dashboard to manage movies and shows. I also aim to deploy the project on AWS or Docker for real-world deployment experience.
 
-🛠️ Tech Stack
-
-Backend (Spring Boot)
-
-Java
-
-Spring Boot
-
-Spring Data JPA (Hibernate)
-
-MySQL
-
-REST API
-
-Frontend (React.js)
-
-React Router
-
-Axios (API calls)
-
-Tailwind / CSS for styling
-
-📂 API Endpoints (Backend @ http://localhost:8081)
-Users
-
-GET /api/users → Fetch all users
-
-POST /api/users → Register user
-
-Movies
-
-GET /api/movies → Fetch all movies
-
-GET /api/movies/{id} → Get movie by ID
-
-Shows
-
-GET /api/shows → Get all shows
-
-GET /api/shows/{id} → Show details
-
-Bookings
-
-POST /api/bookings → Create a booking
-
-GET /api/bookings/{id} → Get booking details
-
-📖 What I Learned
-
-During this project, I gained hands-on knowledge in:
-
-Designing REST APIs in Spring Boot
-
-Implementing DTOs & validation for clean API communication
-
-Handling foreign key relationships in SQL (Users ↔ Bookings ↔ Shows ↔ Seats)
-
-React basics: routing, forms, API integration, error handling
-
-Importance of backend validation (e.g., seat availability checks before booking)
-
-How frontend and backend communicate using JSON
-
-🐞 Errors I Faced & Fixes
-
-Ambiguous handler methods in Spring Boot
-
-Error: "Ambiguous handler methods mapped..."
-
-Fix: Used @GetMapping("/id/{id}"), @GetMapping("/genre/{genre}") instead of overlapping mappings.
-
-Seat availability error during booking
-
-Error: "Seat D2 is not available" even for free seats.
-
-Fix: Corrected database status values (AVAILABLE, BOOKED) and updated booking logic.
-
-React component import issue
-
-Error: "Element type is invalid..."
-
-Fix: Ensured proper default vs named exports/imports.
-
-Foreign key constraint errors in MySQL
-
-Cause: Inserting data without respecting foreign key relations.
-
-Fix: Inserted movies → shows → seats → bookings in proper order.
-
-CORS issue between React & Spring Boot
-
-Error: Blocked requests due to CORS policy.
-
-Fix: Used @CrossOrigin(origins = "http://localhost:3000") in controllers.
-
-🧑‍💻 Hands-On Exposure
-
-This project gave me practical exposure to:
-
-Full-stack development (React + Spring Boot)
-
-Database schema design & entity relationships
-
-Implementing seat booking logic in a real-world scenario
-
-Handling API errors gracefully in frontend
-
-Debugging & fixing runtime exceptions in both frontend & backend
-
-Structuring a project like a production-grade system
-
-✅ Future Improvements
-
-Add authentication (JWT-based login/signup)
-
-Implement payment gateway integration
-
-Admin dashboard for managing movies & shows
-
-Deploy project on AWS / Docker
-
-🔹 This project not only helped me improve technical skills but also gave me confidence in end-to-end application development, debugging, and deploying a production-ready system.
+Overall, this project was a complete learning package that strengthened my skills in Java, Spring Boot, MySQL, React.js, and API integration while also teaching me how to handle real-world issues such as ambiguous endpoints, CORS errors, database integrity, and frontend-backend synchronization.
 
 📌 API Endpoints – BookMyShow Clone
 
